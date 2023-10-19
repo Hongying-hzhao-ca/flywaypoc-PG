@@ -68,6 +68,7 @@ jobs:
       - name: Stage files for publishing
         if: env.publishArtifacts == 'true'
         run: |
+          mkdir -p Artifact_Files/Migration/
           cp -pR ${{ GITHUB.WORKSPACE }}/migrations Artifact_Files/Migration/
  
       
@@ -116,6 +117,7 @@ jobs:
         - name: Stage files for publishing
           if: env.publishArtifacts == 'true'
           run: |
+            mkdir -p Artifact_Files/Reports/
             cp -pR ${{ GITHUB.WORKSPACE }}/reports Artifact_Files/Reports/
 
  
