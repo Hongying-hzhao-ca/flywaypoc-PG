@@ -98,7 +98,7 @@ jobs:
         generateDriftAndChangeReport: true
         failReleaseIfDriftDetected: false
         staticCodeAnalysis: false #Currently not setup in this pipeline
-        publishArtifacts: true
+        publishArtifacts: false
  
       # Steps represent a sequence of tasks that will be executed as part of the job
       steps:
@@ -116,14 +116,15 @@ jobs:
         - name: Stage files for publishing
           if: env.publishArtifacts == 'true'
           run: |
-            cp -R ${{ GITHUB.WORKSPACE }}\reports Artifact_Files/Reports/
+            cp -R ${{ GITHUB.WORKSPACE }}/reports Artifact_Files/Reports/
+
  
-        - name: Publish Check Report as Artifact
-          uses: actions/upload-artifact@v2
-          with: 
-            name: flyway-reports
-            path: Artifact_Files/Reports/
- 
+#        - name: Publish Check Report as Artifact
+#          uses: actions/upload-artifact@v2
+#          with: 
+#            name: flyway-reports
+#            path: Artifact_Files/Reports/
+
  
   prod:
     name: Deploy Production
