@@ -10,9 +10,6 @@ schemaModel = "./schema-model"
   [flywayDesktop.generate]
   undoScripts = true
 
-[redgateCompare]
-filterFile = "filter.rgf"
-
 [flyway]
 mixed = true
 outOfOrder = true
