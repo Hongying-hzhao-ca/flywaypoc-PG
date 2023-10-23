@@ -6,7 +6,7 @@ CREATE TABLE public.myaccounts (
     created_on timestamp without time zone NOT NULL,
     last_login timestamp without time zone
 );
-ALTER TABLE public.myaccounts ADD CONSTRAINT accounts_pkey PRIMARY KEY (user_id);
+ALTER TABLE public.myaccounts ADD CONSTRAINT myaccounts_pkey PRIMARY KEY (user_id);
 
 CREATE UNIQUE INDEX myaccounts_username_key ON public.myaccounts USING btree (username);
 
