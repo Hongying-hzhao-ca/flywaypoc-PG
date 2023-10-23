@@ -1,4 +1,4 @@
-CREATE TABLE public.accounts (
+CREATE TABLE public.myaccounts (
     user_id integer ,
     username character varying(50) NOT NULL,
     password character varying(50) NOT NULL,
@@ -6,10 +6,10 @@ CREATE TABLE public.accounts (
     created_on timestamp without time zone NOT NULL,
     last_login timestamp without time zone
 );
-ALTER TABLE public.accounts ADD CONSTRAINT accounts_pkey PRIMARY KEY (user_id);
+ALTER TABLE public.myaccounts ADD CONSTRAINT accounts_pkey PRIMARY KEY (user_id);
 
-CREATE UNIQUE INDEX accounts_username_key ON public.accounts USING btree (username);
+CREATE UNIQUE INDEX myaccounts_username_key ON public.myaccounts USING btree (username);
 
-CREATE VIEW public.accounts_view (username, password) AS SELECT accounts.username,
-    accounts.password
-   FROM public.accounts;
+CREATE VIEW public.myaccounts_view (username, password) AS SELECT myaccounts.username,
+    myaccounts.password
+   FROM public.myaccounts;
