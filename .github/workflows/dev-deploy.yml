@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
  
-name: main-Workflow
+name: dev-deploy-workflow
  
 # Controls when the workflow will run
 on:
@@ -80,20 +80,20 @@ jobs:
           name: flyway-build-artifact
           path: Artifact_Files/Migration/
  
-  prod-preparation:
-      name: Production Deployment Preparation - Report Creation
+   dev-check:
+      name: DEV Check and Report
       # The type of runner that the job will run on
       runs-on: self-hosted
-      environment: 'prod' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured
+      environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured
       if: ${{ true }} #Set this variable to false to temporarily disable the job
       needs: build
       env:
-        stage: 'Prod'
+        stage: 'dev'
         # For this example, we've hard coded the JDBC here, but you may wish to have them in your project TOML file or as Environment Secrets - (GitHub Settings > Secrets > Actions; specially related to the environment in question) #
-        databaseName: "wz_prod"
-        JDBC: "jdbc:postgresql://flywaypoc.cluster-cjitdl4isjor.ca-central-1.rds.amazonaws.com:5432/wz_prod" 
+        #databaseName: "wz_dev"
+        #JDBC: "jdbc:postgresql://flywaypoc.cluster-cjitdl4isjor.ca-central-1.rds.amazonaws.com:5432/wz_dev" 
 
-        check_JDBC: "jdbc:postgresql://flywaypoc-dev-pg.cjitdl4isjor.ca-central-1.rds.amazonaws.com:5432/wz_check" 
+        #check_JDBC: "jdbc:postgresql://flywaypoc-dev-pg.cjitdl4isjor.ca-central-1.rds.amazonaws.com:5432/wz_check" 
         
         # End of Environment Secrets #
         generateDriftAndChangeReport: true
@@ -127,18 +127,19 @@ jobs:
             name: flyway-reports
             path: Artifact_Files/Reports/
 
- 
-  prod:
-    name: Deploy Production
+
+
+  dev-deploy:
+    name: DEV Deploy 
     # The type of runner that the job will run on
     runs-on: self-hosted
-    environment: 'prod' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
+    environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
     if: ${{ true }} #Set this variable to false to temporarily disable the job
     needs: prod-preparation
     env:
-      stage: 'Prod'
-      databaseName: "wz_prod"
-      JDBC: "jdbc:postgresql://flywaypoc.cluster-cjitdl4isjor.ca-central-1.rds.amazonaws.com:5432/wz_prod" 
+      stage: 'dev'
+      #databaseName: "wz_dev"
+      #JDBC: "jdbc:postgresql://flywaypoc.cluster-cjitdl4isjor.ca-central-1.rds.amazonaws.com:5432/wz_prod" 
       
       pauseForCodeReview: true
  
