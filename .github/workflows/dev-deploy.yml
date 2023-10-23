@@ -33,13 +33,12 @@ jobs:
       stage: 'Build'
       
       # Environment Secrets - In Real Ensure all of the below have been created as an Environment Secret (Projects Settings > Secrets > Actions section, specially related to the environment in question) #
-      databaseName: "wz_build"
-      JDBC: "jdbc:postgresql://flywaypoc-dev-pg.cjitdl4isjor.ca-central-1.rds.amazonaws.com:5432/wz_build" 
+      #databaseName: "wz_build"
+      #JDBC: "jdbc:postgresql://flywaypoc-dev-pg.cjitdl4isjor.ca-central-1.rds.amazonaws.com:5432/wz_build" 
 
       displayName: 'Build'
       executeBuild: true
       publishArtifacts: true
-      #publishArtifacts: false
  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
