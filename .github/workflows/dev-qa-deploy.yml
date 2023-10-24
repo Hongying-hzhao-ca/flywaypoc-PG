@@ -116,15 +116,15 @@ jobs:
         - name: Stage files for publishing
           if: env.publishArtifacts == 'true'
           run: |
-            mkdir -p Artifact_Files/Reports/
-            cp -pR ${{ GITHUB.WORKSPACE }}/Reports Artifact_Files/Reports/
+            mkdir -p Artifact_Files/Reports/${{ env.stage }}/
+            cp -pR ${{ GITHUB.WORKSPACE }}/Reports Artifact_Files/Reports/${{ env.stage }}/
 
  
         - name: Publish Check Report as Artifact
           uses: actions/upload-artifact@v2
           with: 
             name: flyway-reports
-            path: Artifact_Files/Reports/
+            path: Artifact_Files/Reports/${{ env.stage }}/
 
 
 
@@ -191,15 +191,15 @@ jobs:
         - name: Stage files for publishing
           if: env.publishArtifacts == 'true'
           run: |
-            mkdir -p Artifact_Files/Reports/
-            cp -pR ${{ GITHUB.WORKSPACE }}/Reports Artifact_Files/Reports/
+            mkdir -p Artifact_Files/Reports/${{ env.stage }}/
+            cp -pR ${{ GITHUB.WORKSPACE }}/Reports Artifact_Files/Reports/${{ env.stage }}/
 
  
         - name: Publish Check Report as Artifact
           uses: actions/upload-artifact@v2
           with: 
             name: flyway-reports
-            path: Artifact_Files/Reports/
+            path: Artifact_Files/Reports/${{ env.stage }}/
 
 
 
