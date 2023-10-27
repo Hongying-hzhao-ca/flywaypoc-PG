@@ -61,7 +61,7 @@ jobs:
  #     - name: undo Build DB
  #       if: env.executeBuild == 'true'
  #       run: |
- #         flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info undo info -url="${{ env.JDBC }}" -cleanDisabled="false" -target="${{ env.FIRST_UNDO_SCRIPT }}" -reportFilename="Reports/ValidateUScripts" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password='${{ secrets.PASSWORD }}'
+ #         flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info undo info -url="${{ env.JDBC }}" -cleanDisabled="false" -target="${{ env.FIRST_UNDO_SCRIPT }}" -reportFilename="Reports/ValidateUScripts" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
  
        # Create a directory to stage the artifact files
       - name: Stage files for publishing
@@ -109,7 +109,7 @@ jobs:
         - name: Create Check Reports
           if: env.generateDriftAndChangeReport == 'true'
           run: |
-            flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" check -dryrun -changes -drift "-check.failOnDrift=${{ env.failReleaseIfDriftDetected }}" "-check.buildUrl=${{ env.check_JDBC }}" "-check.buildUser=${{ secrets.BUILD_USER }}" "-check.buildPassword='${{ secrets.BUILD_PASSWORD }}'" -url="${{ env.JDBC }}" "-check.reportFilename=${{ GITHUB.WORKSPACE }}/Reports/${{ env.databaseName }}-Run-${{ GITHUB.RUN_ID }}-Check-Report.html" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password='${{ secrets.PASSWORD }}'
+            flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" check -dryrun -changes -drift "-check.failOnDrift=${{ env.failReleaseIfDriftDetected }}" "-check.buildUrl=${{ env.check_JDBC }}" "-check.buildUser=${{ secrets.BUILD_USER }}" "-check.buildPassword=${{ secrets.BUILD_PASSWORD }}" -url="${{ env.JDBC }}" "-check.reportFilename=${{ GITHUB.WORKSPACE }}/Reports/${{ env.databaseName }}-Run-${{ GITHUB.RUN_ID }}-Check-Report.html" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
           continue-on-error: true
  
          # Create a directory to stage the artifact files
@@ -151,7 +151,7 @@ jobs:
       - name: Migrate PROD DB
         if: ${{ true }}
         run: |
-          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password='${{ secrets.PASSWORD }}'
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
           
           
   
