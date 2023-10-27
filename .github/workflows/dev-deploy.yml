@@ -92,7 +92,7 @@ jobs:
         databaseName: ${{ vars.databaseName }}
         JDBC: ${{ vars.JDBC }} 
 
-        check_JDBC: ${{ vars.check_JDBC }}
+        #check_JDBC: ${{ vars.check_JDBC }}
         
         # End of Environment Secrets #
         generateDriftAndChangeReport: true
