@@ -34,7 +34,7 @@ jobs:
       JDBC: ${{ vars.JDBC }}  
 
       displayName: 'DEV Rollback'
-      executeON: true
+      executeON: false
       publishArtifacts: false
  
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -90,7 +90,7 @@ jobs:
       JDBC: ${{ vars.JDBC }}  
 
       displayName: 'PROD Cleanup'
-      executeON: true
+      executeON: false
       publishArtifacts: false
  
     # Steps represent a sequence of tasks that will be executed as part of the job
