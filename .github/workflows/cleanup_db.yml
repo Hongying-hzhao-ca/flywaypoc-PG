@@ -48,6 +48,8 @@ jobs:
         run: |
           flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info clean info -url="${{ env.JDBC }}" -cleanDisabled="false" -reportFilename="Reports/CleanDB" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
           flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info undoinfo -url="${{ env.JDBC }}" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+          continue-on-error: true
+          
   qa-cleanup:
     name: QA Cleanup
     # The type of runner that the job will run on
