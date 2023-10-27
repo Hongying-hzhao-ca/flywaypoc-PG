@@ -52,7 +52,8 @@ jobs:
     name: QA Cleanup
     # The type of runner that the job will run on
     runs-on: self-hosted
-    environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
+    environment: 'qa' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
+    needs: dev-cleanup
     env:
       stage: 'QA'
       
@@ -80,7 +81,8 @@ jobs:
     name: PROD Cleanup
     # The type of runner that the job will run on
     runs-on: self-hosted
-    environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
+    environment: 'prod' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
+    needs: qa-cleanup
     env:
       stage: 'PROD'
       
