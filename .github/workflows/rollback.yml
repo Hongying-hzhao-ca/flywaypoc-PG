@@ -90,7 +90,7 @@ jobs:
       JDBC: ${{ vars.JDBC }}  
 
       displayName: 'PROD Cleanup'
-      executeON: false
+      executeON: true
       publishArtifacts: false
  
     # Steps represent a sequence of tasks that will be executed as part of the job
