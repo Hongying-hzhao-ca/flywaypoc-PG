@@ -97,20 +97,5 @@ CREATE UNIQUE INDEX accounts_username_key ON public.accounts USING btree (userna
 DO language plpgsql $$BEGIN RAISE NOTICE 'Creating public.accounts_email_key...';END$$;
 CREATE UNIQUE INDEX accounts_email_key ON public.accounts USING btree (email);
 
-DO $$
-DECLARE 
-targetdb text;
-BEGIN
-targetdb := '${flyway:database}';
-IF (targetdb = 'wz_dev') THEN
-        drop role dev_user1 ;
-ELSIF (targetdb = 'wz_qa')  THEN
-        drop role qa_user1 ;
-ELSIF (targetdb = 'wz_uat')  THEN
-        drop role uat_user1 ;
-ELSIF (targetdb = 'wz_prod')  THEN
-        drop role prod_user1 ;
-END IF;
-END $$;
 
 SET check_function_bodies = true;
