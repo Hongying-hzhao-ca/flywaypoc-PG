@@ -76,7 +76,7 @@ jobs:
     runs-on: self-hosted
     environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
     if: ${{ true }} #Set this variable to false to temporarily disable the job
-    needs: dev-check
+    needs: [dev-check, qa-check, prod_check]
     env:
       stage: 'dev'
       databaseName: ${{ vars.databaseName }}
@@ -102,7 +102,7 @@ jobs:
       runs-on: self-hosted
       environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured
       if: ${{ true }} #Set this variable to false to temporarily disable the job
-      needs: dev-deploy
+      needs: [dev-check]
       env:
         stage: 'qa'
         # For this example, we've hard coded the JDBC here, but you may wish to have them in your project TOML file or as Environment Secrets - (GitHub Settings > Secrets > Actions; specially related to the environment in question) #
@@ -149,7 +149,7 @@ jobs:
     runs-on: self-hosted
     environment: 'qa' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
     if: ${{ true }} #Set this variable to false to temporarily disable the job
-    needs: qa-check
+    needs: [dev-deploy, qa-check]
     env:
       stage: 'qa'
       databaseName: ${{ vars.databaseName }}
@@ -175,7 +175,7 @@ jobs:
       runs-on: self-hosted
       environment: 'prod' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured
       if: ${{ true }} #Set this variable to false to temporarily disable the job
-      needs: qa-deploy
+      needs: [qa-check]
       env:
         stage: 'prod'
         # For this example, we've hard coded the JDBC here, but you may wish to have them in your project TOML file or as Environment Secrets - (GitHub Settings > Secrets > Actions; specially related to the environment in question) #
@@ -224,7 +224,7 @@ jobs:
     runs-on: self-hosted
     environment: 'prod' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
     if: ${{ true }} #Set this variable to false to temporarily disable the job
-    needs: prod-check
+    needs: [dev-deploy, qa-deploy, prod-check]
     env:
       stage: 'prod'
       databaseName: ${{ vars.databaseName }}
