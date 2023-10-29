@@ -79,7 +79,7 @@ jobs:
           name: flyway-build-artifact
           path: Artifact_Files/Migration/
  
-dev-check:
+  dev-check:
       name: DEV Check and Report
       # The type of runner that the job will run on
       runs-on: self-hosted
@@ -125,7 +125,7 @@ dev-check:
           with: 
             name: flyway-reports
             path: Artifact_Files/Reports/
-dev-deploy:
+  dev-deploy:
     name: DEV Deploy 
     # The type of runner that the job will run on
     runs-on: self-hosted
@@ -151,7 +151,7 @@ dev-deploy:
           flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
           
           
-qa-check:
+  qa-check:
       name: QA Check and Report
       # The type of runner that the job will run on
       runs-on: self-hosted
@@ -198,7 +198,7 @@ qa-check:
             name: flyway-reports
             path: Artifact_Files/Reports/
 
-qa-deploy:
+  qa-deploy:
     name: QA Deploy 
     # The type of runner that the job will run on
     runs-on: self-hosted
@@ -224,7 +224,7 @@ qa-deploy:
           flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
           
           
-prod-check:
+  prod-check:
       name: PROD Check and Report
       # The type of runner that the job will run on
       runs-on: self-hosted
