@@ -176,7 +176,7 @@ jobs:
             path: Artifact_Files/Reports/
 
 
-  prod_check:
+  prod-check:
       name: PROD Check and Report
       # The type of runner that the job will run on
       runs-on: self-hosted
@@ -230,7 +230,7 @@ jobs:
     runs-on: self-hosted
     environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
     if: ${{ true }} #Set this variable to false to temporarily disable the job
-    needs: [dev-check, qa-check, prod_check]
+    needs: [dev-check, qa-check, prod-check]
     env:
       stage: 'dev'
       databaseName: ${{ vars.databaseName }}
@@ -281,7 +281,7 @@ jobs:
     runs-on: self-hosted
     environment: 'prod' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
     if: ${{ true }} #Set this variable to false to temporarily disable the job
-    needs: [qa_deploy]
+    needs: [qa-deploy]
     env:
       stage: 'prod'
       databaseName: ${{ vars.databaseName }}
