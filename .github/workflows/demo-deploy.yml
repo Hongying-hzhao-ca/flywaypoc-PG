@@ -134,7 +134,7 @@ jobs:
       runs-on: self-hosted
       environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured
       if: ${{ true }} #Set this variable to false to temporarily disable the job
-      needs: [build]
+      needs: [build, dev-check]
       env:
         stage: 'qa'
         # For this example, we've hard coded the JDBC here, but you may wish to have them in your project TOML file or as Environment Secrets - (GitHub Settings > Secrets > Actions; specially related to the environment in question) #
@@ -182,7 +182,7 @@ jobs:
       runs-on: self-hosted
       environment: 'prod' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured
       if: ${{ true }} #Set this variable to false to temporarily disable the job
-      needs: [build]
+      needs: [build,qa-check]
       env:
         stage: 'prod'
         # For this example, we've hard coded the JDBC here, but you may wish to have them in your project TOML file or as Environment Secrets - (GitHub Settings > Secrets > Actions; specially related to the environment in question) #
