@@ -176,7 +176,7 @@ jobs:
             path: Artifact_Files/Reports/
 
 
-  prod-check:
+  prod_check:
       name: PROD Check and Report
       # The type of runner that the job will run on
       runs-on: self-hosted
