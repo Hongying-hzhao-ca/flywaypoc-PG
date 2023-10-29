@@ -23,7 +23,6 @@ env:
  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
   # This workflow contains a single job called "build"
   build:
     name: Deploy Build
@@ -46,23 +45,23 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       
-      # # Runs the Flyway Clean command against the Build database
-      # - name: Clean Build DB
-        # if: env.executeBuild == 'true'
-        # run: |
-          # flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info clean info -url="${{ env.JDBC }}" -cleanDisabled="false" -reportFilename="Reports/CleanDB" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+      # Runs the Flyway Clean command against the Build database
+      - name: Clean Build DB
+        if: env.executeBuild == 'true'
+        run: |
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info clean info -url="${{ env.JDBC }}" -cleanDisabled="false" -reportFilename="Reports/CleanDB" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
         
-      # # Runs the Flyway Migrate command against the Build database
-      # - name: Migrate Build DB
-        # if: env.executeBuild == 'true'
-        # run: |
-          # flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -reportFilename="Reports/ValidateVScripts" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+      # Runs the Flyway Migrate command against the Build database
+      - name: Migrate Build DB
+        if: env.executeBuild == 'true'
+        run: |
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -reportFilename="Reports/ValidateVScripts" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
           
-      # # Runs the Flyway Undo command against the Build database
- # #     - name: undo Build DB
- # #       if: env.executeBuild == 'true'
- # #       run: |
- # #         flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info undo info -url="${{ env.JDBC }}" -cleanDisabled="false" -target="${{ env.FIRST_UNDO_SCRIPT }}" -reportFilename="Reports/ValidateUScripts" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password=${{ secrets.PASSWORD }}
+      # Runs the Flyway Undo command against the Build database
+ #     - name: undo Build DB
+ #       if: env.executeBuild == 'true'
+ #       run: |
+ #         flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info undo info -url="${{ env.JDBC }}" -cleanDisabled="false" -target="${{ env.FIRST_UNDO_SCRIPT }}" -reportFilename="Reports/ValidateUScripts" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password=${{ secrets.PASSWORD }}
  
        # Create a directory to stage the artifact files
       - name: Stage files for publishing
@@ -79,14 +78,14 @@ jobs:
         with: 
           name: flyway-build-artifact
           path: Artifact_Files/Migration/
-          
+ 
   dev-check:
       name: DEV Check and Report
       # The type of runner that the job will run on
       runs-on: self-hosted
       environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured
       if: ${{ true }} #Set this variable to false to temporarily disable the job
-
+      needs: build
       env:
         stage: 'dev'
         # For this example, we've hard coded the JDBC here, but you may wish to have them in your project TOML file or as Environment Secrets - (GitHub Settings > Secrets > Actions; specially related to the environment in question) #
@@ -126,32 +125,3 @@ jobs:
           with: 
             name: flyway-reports
             path: Artifact_Files/Reports/
-
-
-
-  dev-deploy:
-    name: DEV Deploy 
-    # The type of runner that the job will run on
-    runs-on: self-hosted
-    environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
-    if: ${{ true }} #Set this variable to false to temporarily disable the job
-    needs: dev-check
-    env:
-      stage: 'dev'
-      databaseName: ${{ vars.databaseName }}
-      JDBC: ${{ vars.JDBC }} 
-      
-      pauseForCodeReview: true
- 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-        
-      # Runs the Flyway Migrate against the Production database
-      - name: Migrate DEV DB
-        if: ${{ true }}
-        run: |
-          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
-          
-          
