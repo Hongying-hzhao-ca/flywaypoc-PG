@@ -125,3 +125,28 @@ jobs:
           with: 
             name: flyway-reports
             path: Artifact_Files/Reports/
+
+  dev-deploy:
+    name: DEV Deploy 
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    environment: 'dev' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
+    if: ${{ true }} #Set this variable to false to temporarily disable the job
+    needs: dev-check
+    env:
+      stage: 'dev'
+      databaseName: ${{ vars.databaseName }}
+      JDBC: ${{ vars.JDBC }} 
+      
+      pauseForCodeReview: true
+ 
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        
+      # Runs the Flyway Migrate against the Production database
+      - name: Migrate DEV DB
+        if: ${{ true }}
+        run: |
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
