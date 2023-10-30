@@ -285,7 +285,7 @@ jobs:
       stage: 'prod'
       databaseName: ${{ vars.databaseName }}
       JDBC: ${{ vars.JDBC }} 
-      SKIPEXECUTINGMIGRATIONS: false
+      SKIPEXECUTINGMIGRATIONS: true
       pauseForCodeReview: true
  
     # Steps represent a sequence of tasks that will be executed as part of the job
