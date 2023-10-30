@@ -1,1 +1,0 @@
-CREATE UNIQUE INDEX myaccounts_created_on_key ON public.myaccounts USING btree (created_on);
