@@ -21,6 +21,7 @@ env:
   # Enable this for additional debug logging
   ACTIONS_RUNNER_DEBUG: true 
 #  SKIP_MIGRATION_ENV: prod
+
  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -261,8 +262,11 @@ jobs:
         # if: ${{ true }}
         if: env.executeOn == 'true'
         run: |
-          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
-          
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+        if: env.executeOn == 'false'
+        run: |
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -skipExecutingMigrations=true -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+    
   qa-deploy:
     name: QA Deploy 
     # The type of runner that the job will run on
@@ -291,10 +295,13 @@ jobs:
       # Runs the Flyway Migrate against the Production database
       - name: Migrate QA DB
         # if: ${{ true }}
-        if: env.executeOn == 'true'        
+        if: env.executeOn == 'true'
         run: |
-          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
-          
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+        if: env.executeOn == 'false'
+        run: |
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -skipExecutingMigrations=true -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+              
           
   prod-deploy:
     name: PROD Deploy 
@@ -326,7 +333,10 @@ jobs:
         # if: ${{ true }}
         if: env.executeOn == 'true'
         run: |
-          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled="false" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
-          
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+        if: env.executeOn == 'false'
+        run: |
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -skipExecutingMigrations=true -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+              
           
   
