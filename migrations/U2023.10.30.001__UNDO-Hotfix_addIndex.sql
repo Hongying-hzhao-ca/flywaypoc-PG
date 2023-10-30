@@ -1,1 +1,1 @@
-DROP index 
+DROP INDEX myaccounts_created_on_key;
