@@ -235,7 +235,7 @@ jobs:
       stage: 'dev'
       databaseName: ${{ vars.databaseName }}
       JDBC: ${{ vars.JDBC }} 
-      
+      SKIPEXECUTINGMIGRATIONS: false
       pauseForCodeReview: true
  
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -260,7 +260,7 @@ jobs:
       stage: 'qa'
       databaseName: ${{ vars.databaseName }}
       JDBC: ${{ vars.JDBC }} 
-      
+      SKIPEXECUTINGMIGRATIONS: false
       pauseForCodeReview: true
  
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -285,7 +285,7 @@ jobs:
       stage: 'prod'
       databaseName: ${{ vars.databaseName }}
       JDBC: ${{ vars.JDBC }} 
-      
+      SKIPEXECUTINGMIGRATIONS: true
       pauseForCodeReview: true
  
     # Steps represent a sequence of tasks that will be executed as part of the job
