@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
  
-name: hotfix-demo-workflow
+name: demo-deploy-workflow
  
 # Controls when the workflow will run
 on:
@@ -20,7 +20,7 @@ env:
   FIRST_UNDO_SCRIPT: "002_20230821134818"
   # Enable this for additional debug logging
   ACTIONS_RUNNER_DEBUG: true 
-#  SKIP_MIGRATION_ENV: prod
+  SKIP_MIGRATION_ENV: prod
 
  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -42,10 +42,7 @@ jobs:
       displayName: 'Build'
 
       # executeOn: true
-      ${{ if eq(env.stage, ${{ SKIP_MIGRATION_ENV }}) }}:
-          executeOn: false
-      ${{ else }}:
-          executeOn: true
+      executeOn: true
           
       publishArtifacts: true
  
@@ -245,10 +242,7 @@ jobs:
       JDBC: ${{ vars.JDBC }} 
 
       # executeOn: true
-      ${{ if eq(env.stage, ${{ SKIP_MIGRATION_ENV }}) }}:
-          executeOn: false
-      ${{ else }}:
-          executeOn: true
+      executeOn: true
           
       pauseForCodeReview: true
  
@@ -260,12 +254,14 @@ jobs:
       # Runs the Flyway Migrate against the Production database
       - name: Migrate DEV DB
         # if: ${{ true }}
-        if: env.executeOn == 'true'
-        run: |
-          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
-        if: env.executeOn == 'false'
+        # if: env.executeOn == 'true'
+        if ${{ env.stage }} == $ {{ env.SKIP_MIGRATION_ENV }}
         run: |
           flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -skipExecutingMigrations=true -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+        if ${{ env.stage }} <> $ {{ env.SKIP_MIGRATION_ENV }}
+        run: |
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+
     
   qa-deploy:
     name: QA Deploy 
@@ -280,10 +276,7 @@ jobs:
       JDBC: ${{ vars.JDBC }} 
 
       # executeOn: true
-      ${{ if eq(env.stage, ${{ SKIP_MIGRATION_ENV }}) }}:
-          executeOn: false
-      ${{ else }}:
-          executeOn: true
+      executeOn: true
           
       pauseForCodeReview: true
  
@@ -295,13 +288,13 @@ jobs:
       # Runs the Flyway Migrate against the Production database
       - name: Migrate QA DB
         # if: ${{ true }}
-        if: env.executeOn == 'true'
-        run: |
-          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
-        if: env.executeOn == 'false'
+        # if: env.executeOn == 'true'
+        if ${{ env.stage }} == $ {{ env.SKIP_MIGRATION_ENV }}
         run: |
           flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -skipExecutingMigrations=true -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
-              
+        if ${{ env.stage }} <> $ {{ env.SKIP_MIGRATION_ENV }}
+        run: |
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
           
   prod-deploy:
     name: PROD Deploy 
@@ -331,12 +324,13 @@ jobs:
       # Runs the Flyway Migrate against the Production database
       - name: Migrate PROD DB
         # if: ${{ true }}
-        if: env.executeOn == 'true'
-        run: |
-          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
-        if: env.executeOn == 'false'
+        # if: env.executeOn == 'true'
+        if ${{ env.stage }} == $ {{ env.SKIP_MIGRATION_ENV }}
         run: |
           flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -skipExecutingMigrations=true -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
+        if ${{ env.stage }} <> $ {{ env.SKIP_MIGRATION_ENV }}
+        run: |
+          flyway -baselineOnMigrate="true" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" info migrate info -url="${{ env.JDBC }}" -errorOverrides="S0001:0:I-" -user=${{ secrets.USER }} -password="${{ secrets.PASSWORD }}"
               
           
   
